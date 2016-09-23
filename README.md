@@ -13,7 +13,7 @@ $adb shell am startservice [Arguments] taipeitech.ssl.serviceagent/.AgentService
 ## Wifi
 
 | Description | Argument                             |
-|:
+| ----------- | ------------------------------------ |
 | Open wifi   | -a setWifiEnabled --ez enabled true  |
 | Close wifi  | -a setWifiEnabled --ez enabled false |
 
