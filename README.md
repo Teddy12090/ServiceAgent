@@ -6,7 +6,6 @@
 # Execution
 
 ```shell
-# open wifi
 $adb shell am startservice [Arguments] taipeitech.ssl.serviceagent/.AgentService
 ```
 
