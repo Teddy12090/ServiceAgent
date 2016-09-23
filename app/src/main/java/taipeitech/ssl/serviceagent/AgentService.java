@@ -13,6 +13,7 @@ import android.os.RemoteException;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
+import java.net.UnknownServiceException;
 
 public class AgentService extends IntentService {
     public AgentService() {
@@ -25,28 +26,15 @@ public class AgentService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent,flags,startId);
-    }
-
-    private boolean isWifiEnabled() {
-        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        return wifiManager.isWifiEnabled();
-    }
-
-    private void setWifiEnabled(boolean enabled) {
-        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        wifiManager.setWifiEnabled(enabled);
-    }
-
-    private void connectToWifi(String ssid, String key) {
-        WifiConfiguration wifiConfig = new WifiConfiguration();
-        wifiConfig.SSID = String.format("\"%s\"", ssid);
-        wifiConfig.preSharedKey = String.format("\"%s\"", key);
-
-        WifiManager wifiManager = (WifiManager)getSystemService(WIFI_SERVICE);
-        int netId = wifiManager.addNetwork(wifiConfig);
-        wifiManager.disconnect();
-        wifiManager.enableNetwork(netId, true);
-        wifiManager.reconnect();
+        WifiService wifiService = new WifiService((WifiManager) getSystemService(Context.WIFI_SERVICE));
+        switch (intent.getAction()) {
+            case "setWifiEnabled":
+                wifiService.setWifiEnabled(intent.getBooleanExtra("enabled", true));
+                break;
+            default:
+                Toast.makeText(this, "Unknown action:" + intent.getAction(), Toast.LENGTH_SHORT).show();
+                throw new UnknownError(intent.getAction());
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 }
